@@ -1,0 +1,2532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOP Interview Questions</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --easy: #22c55e;
+    --medium: #f59e0b;
+    --hard: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero {
+    position: relative;
+    padding: 60px 40px 40px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 1px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding: 24px 40px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 0 40px;
+    z-index: 1;
+    position: relative;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-size: 2rem;
+    font-weight: 800;
+    font-family: var(--mono);
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* Filter bar */
+  .filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 28px 40px 0;
+    z-index: 1;
+    position: relative;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.05);
+  }
+
+  .filter-btn.diff-easy.active { border-color: var(--easy); color: var(--easy); background: rgba(34,197,94,0.05); }
+  .filter-btn.diff-medium.active { border-color: var(--medium); color: var(--medium); background: rgba(245,158,11,0.05); }
+  .filter-btn.diff-hard.active { border-color: var(--hard); color: var(--hard); background: rgba(239,68,68,0.05); }
+
+  /* Progress tracker */
+  .progress-bar-wrap {
+    margin: 20px 40px 0;
+    z-index: 1;
+    position: relative;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* Main layout */
+  .main {
+    padding: 32px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Phase section */
+  .phase-section {
+    margin-bottom: 56px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .phase-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 4px 10px;
+    border-radius: 3px;
+    letter-spacing: 2px;
+  }
+
+  .phase-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .phase-desc {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  /* Concept group */
+  .concept-group {
+    margin-bottom: 32px;
+  }
+
+  .concept-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 12px;
+    padding: 5px 12px;
+    background: rgba(124,58,237,0.08);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 3px;
+  }
+
+  .concept-label::before {
+    content: '◆';
+    font-size: 8px;
+  }
+
+  /* Question grid */
+  .questions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 12px;
+  }
+
+  /* Question card */
+  .q-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border);
+    transition: background 0.2s;
+  }
+
+  .q-card:hover {
+    border-color: rgba(0,229,255,0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+
+  .q-card:hover::before { background: var(--accent); }
+  .q-card.solved { opacity: 0.5; }
+  .q-card.solved::before { background: var(--easy); }
+
+  .q-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .q-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-text {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text);
+    font-weight: 500;
+    flex: 1;
+  }
+
+  .q-check {
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+
+  .q-check:hover { border-color: var(--easy); }
+  .q-card.solved .q-check {
+    background: var(--easy);
+    border-color: var(--easy);
+  }
+
+  .q-check svg { display: none; }
+  .q-card.solved .q-check svg { display: block; }
+
+  .q-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .badge-easy { color: var(--easy); background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+  .badge-medium { color: var(--medium); background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); }
+  .badge-hard { color: var(--hard); background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+
+  .constraint-toggle {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    transition: color 0.2s;
+    user-select: none;
+  }
+
+  .constraint-toggle:hover { color: var(--accent); }
+
+  .constraint-box {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(0,0,0,0.3);
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .constraint-box.open { display: block; }
+
+  .constraint-box strong {
+    color: var(--accent);
+    display: block;
+    margin-bottom: 4px;
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 60px;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 13px;
+    display: none;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  @media (max-width: 768px) {
+    .hero, .main, .stats-bar, .filters, .progress-bar-wrap { padding-left: 20px; padding-right: 20px; }
+    .stats-bar { margin: 0 20px; }
+    .questions-grid { grid-template-columns: 1fr; }
+    .phase-desc { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">// Interview Prep — OOP Track</div>
+  <h1>OOP Questions</h1>
+  <div class="hero-sub">concept-wise · phase-wise · no answers · just grind</div>
+</div>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num" id="total-count">0</div><div class="stat-label">Total</div></div>
+  <div class="stat"><div class="stat-num" id="solved-count" style="color:var(--easy)">0</div><div class="stat-label">Solved</div></div>
+  <div class="stat"><div class="stat-num" id="easy-count" style="color:var(--easy)">0</div><div class="stat-label">Easy</div></div>
+  <div class="stat"><div class="stat-num" id="med-count" style="color:var(--medium)">0</div><div class="stat-label">Medium</div></div>
+  <div class="stat"><div class="stat-num" id="hard-count" style="color:var(--hard)">0</div><div class="stat-label">Hard</div></div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-info">
+    <span>PROGRESS</span>
+    <span id="progress-text">0 / 0 solved</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">ALL</button>
+  <button class="filter-btn diff-easy" data-filter="easy">EASY</button>
+  <button class="filter-btn diff-medium" data-filter="medium">MEDIUM</button>
+  <button class="filter-btn diff-hard" data-filter="hard">HARD</button>
+  <button class="filter-btn" data-filter="unsolved">UNSOLVED</button>
+</div>
+
+<div class="main" id="main-content">
+
+  <!-- PHASE 1 -->
+  <div class="phase-section" data-phase="1">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 01</span>
+      <h2 class="phase-title">Core OOP Fundamentals</h2>
+      <span class="phase-desc">Classes · Objects · Constructors</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Classes & Objects</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#001</span>
+            <p class="q-text">Design a <code>BankAccount</code> class with deposit, withdraw, and balance check methods. Ensure balance never goes negative.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Initial balance ≥ 0 · withdrawal amount ≤ current balance · deposit amount > 0 · balance precision: 2 decimal places
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#002</span>
+            <p class="q-text">Create a <code>Student</code> class that stores name, grades list, and computes average GPA. Support adding and removing grades.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Grades in range [0.0, 10.0] · at least 1 grade before GPA is computable · duplicate grades allowed · grade list max size: 50
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#003</span>
+            <p class="q-text">Implement a <code>Library</code> system where books can be added, searched by title/author, borrowed, and returned with a due date.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            A book can only be borrowed if available · borrow period: 14 days · max 3 books per member at a time · ISBN is unique identifier
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#004</span>
+            <p class="q-text">Design a <code>Parking Lot</code> class. Support vehicle entry, exit, slot assignment, and fee calculation based on hours parked.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            3 types: compact, regular, large · fee: ₹20/hr · vehicle can only exit from its assigned slot · max capacity per type: 50
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Constructors & Destructors</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#005</span>
+            <p class="q-text">Implement a <code>Rectangle</code> class with default, parameterized, and copy constructors. Include area and perimeter methods.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Default: 1×1 · dimensions > 0 · copy constructor must deep copy · dimensions are integers
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#006</span>
+            <p class="q-text">Create a <code>DatabaseConnection</code> class using the Singleton pattern. It should support query execution and connection pooling basics.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Only 1 instance allowed · thread-safe instantiation · max pool size: 10 · idle connection timeout: 30s
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-section" data-phase="2">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 02</span>
+      <h2 class="phase-title">Encapsulation & Abstraction</h2>
+      <span class="phase-desc">Access Control · Interfaces · Abstract Classes</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Encapsulation</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#007</span>
+            <p class="q-text">Build an <code>Employee</code> class with private salary. Add validated setters ensuring salary can only be increased, never decreased.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Salary range: [10000, 10000000] · only HR role can modify salary · raise must be ≥ 5% · log every change
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#008</span>
+            <p class="q-text">Design a <code>CreditCard</code> class with encapsulated card number (show only last 4 digits), credit limit, and transaction history.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Card number: 16 digits · no transaction if amount > available credit · max 100 transactions stored · support for blocking/unblocking
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#009</span>
+            <p class="q-text">Implement an <code>ImmutablePoint</code> class in Java/C++ where all fields are set at construction time and can never be modified.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            No setters · final/const fields only · provide withX(), withY() that return NEW objects · must be thread-safe · support 2D and 3D
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Abstract Classes & Interfaces</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#010</span>
+            <p class="q-text">Create an abstract <code>Shape</code> class with abstract methods <code>area()</code> and <code>perimeter()</code>. Implement Circle, Triangle, and Hexagon.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            All dimensions > 0 · area and perimeter return double · toString() must show type + measurements · Triangle must validate triangle inequality
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#011</span>
+            <p class="q-text">Define a <code>Printable</code> interface and a <code>Serializable</code> interface. Create a <code>Document</code> class that implements both.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Printable: print(format) supports PDF/HTML/TXT · Serializable: serialize() returns string, deserialize() rebuilds object · document max size: 10MB
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#012</span>
+            <p class="q-text">Design a plugin architecture using interfaces. A <code>PaymentProcessor</code> interface must support PayPal, Stripe, and UPI implementations interchangeably.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Each processor: processPayment(), refund(), getStatus() · amount > 0 · currency conversion support required · failure handling must be uniform across all
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-section" data-phase="3">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 03</span>
+      <h2 class="phase-title">Inheritance</h2>
+      <span class="phase-desc">Single · Multi-level · Hierarchical · Hybrid</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Single & Multi-level Inheritance</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#013</span>
+            <p class="q-text">Create a base <code>Vehicle</code> class. Inherit <code>Car</code> and <code>Truck</code> from it. Each should override a <code>describe()</code> method.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Vehicle: speed, fuel type, year · Car adds: seating capacity · Truck adds: payload capacity · describe() must include parent fields
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#014</span>
+            <p class="q-text">Model a 3-level chain: <code>Animal → Mammal → Dog</code>. Each level adds attributes and methods. Demonstrate method overriding at each level.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Animal: eat(), breathe() · Mammal adds: nurse(), warmBlooded · Dog adds: breed, bark() · each class calls super() in constructor
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#015</span>
+            <p class="q-text">Build an <code>Employee</code> hierarchy: <code>Employee → Manager → Director</code>. Override <code>calculateBonus()</code> differently at each level.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Employee bonus: 5% · Manager: 10% + team size factor · Director: 20% + department performance · bonus cannot exceed salary
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Multiple & Hierarchical Inheritance</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#016</span>
+            <p class="q-text">Resolve the Diamond Problem. Create interfaces <code>Flyable</code> and <code>Swimmable</code>, then a <code>Duck</code> class that implements both without conflict.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Both interfaces have a move() method · Duck must explicitly resolve the ambiguity · demonstrate which move() is called in each context
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#017</span>
+            <p class="q-text">Design a game character system: <code>Character</code> base → <code>Warrior</code>, <code>Mage</code>, <code>Archer</code>. Then create <code>Paladin</code> inheriting from both Warrior and Mage.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Each class has attack() and defend() · Paladin's stats = average of both parents · stats range: [1–100] · HP cannot go below 0
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#018</span>
+            <p class="q-text">Implement a notification system where <code>EmailNotifier</code> and <code>SMSNotifier</code> both extend an abstract <code>Notifier</code>. Add a <code>MultiNotifier</code> that sends to all.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Message max: 500 chars for SMS, 10000 for email · MultiNotifier fails gracefully if one channel fails · retry 3 times on failure · log delivery status
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-section" data-phase="4">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 04</span>
+      <h2 class="phase-title">Polymorphism</h2>
+      <span class="phase-desc">Compile-time · Runtime · Method Overloading & Overriding</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Method Overloading (Compile-time)</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#019</span>
+            <p class="q-text">Create a <code>Calculator</code> class with overloaded <code>add()</code> methods that handle int, double, String, and array inputs differently.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            int overflow must be handled · String "add" means concatenation · array add sums all elements · at least 5 overloaded versions
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#020</span>
+            <p class="q-text">Implement a <code>Logger</code> class with overloaded <code>log()</code> methods: log by message only, with severity level, with timestamp, or with all three.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Severity: DEBUG, INFO, WARN, ERROR · message max: 1000 chars · default severity: INFO · timestamp format: ISO 8601
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Method Overriding (Runtime / Dynamic Dispatch)</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#021</span>
+            <p class="q-text">Build a <code>MediaPlayer</code> hierarchy. Base: <code>play()</code>. Subclasses: <code>AudioPlayer</code>, <code>VideoPlayer</code>, <code>StreamingPlayer</code> each override <code>play()</code> differently. Store all in a base array.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Array of type MediaPlayer[] holds all · calling play() on each should invoke the correct subclass implementation · support pause() and stop() too
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#022</span>
+            <p class="q-text">Design a tax system: abstract <code>TaxCalculator</code> with overridden <code>compute(income)</code> for <code>SalariedTax</code>, <code>BusinessTax</code>, and <code>CapitalGainsTax</code>.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Income ≥ 0 · slab-based rates · tax cannot exceed income · result rounded to 2 decimal places · support exemptions via parameter
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#023</span>
+            <p class="q-text">Implement a rendering engine with <code>Renderer</code> base class and <code>OpenGLRenderer</code>, <code>VulkanRenderer</code>, <code>SoftwareRenderer</code> overrides. Demonstrate runtime selection based on hardware capability.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Renderer selection at runtime · fallback chain: Vulkan → OpenGL → Software · each renderer has draw(), clear(), resize() · resolution constraints per renderer type
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Operator Overloading</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#024</span>
+            <p class="q-text">Implement a <code>Matrix</code> class with overloaded <code>+</code>, <code>*</code>, <code>==</code>, and <code>[]</code> operators for 2D matrix operations.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Addition: dimensions must match · Multiplication: inner dimensions must match · max size: 100×100 · [] gives row vector · values: float
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#025</span>
+            <p class="q-text">Build a <code>Fraction</code> class with overloaded arithmetic and comparison operators. All results should be in fully reduced form.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Denominator ≠ 0 · always store in reduced form using GCD · negative fraction: numerator carries sign · support + − × ÷ == != < > <= >=
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-section" data-phase="5">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 05</span>
+      <h2 class="phase-title">Design Patterns</h2>
+      <span class="phase-desc">Creational · Structural · Behavioral</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Creational Patterns</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#026</span>
+            <p class="q-text">Implement the <strong>Factory Method</strong> pattern to create different types of <code>Notification</code> objects (Push, Email, SMS) without specifying exact classes.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Factory takes type string/enum · returns correct subclass · adding new notification type should NOT modify existing factory code · throw on unknown type
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#027</span>
+            <p class="q-text">Apply the <strong>Builder Pattern</strong> to construct a complex <code>Pizza</code> object with multiple optional toppings, crust types, and sizes.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Size and base sauce are mandatory · max 10 toppings · build() validates required fields · builder methods return 'this' for chaining · Pizza is immutable once built
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#028</span>
+            <p class="q-text">Use the <strong>Prototype Pattern</strong> to clone complex <code>GameLevel</code> objects (with enemies, items, and terrain) cheaply without re-initializing from scratch.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Deep clone required — modifying clone must not affect original · enemies list: deep copy · terrain: reference is OK if immutable · clone takes < O(n²) time
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Structural Patterns</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#029</span>
+            <p class="q-text">Implement the <strong>Adapter Pattern</strong> to make a legacy <code>OldPaymentGateway</code> API compatible with a new <code>ModernPaymentInterface</code>.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Old API: processPayment(String, int cents) · New interface: pay(amount: float, currency: String) · adapter must handle currency conversion · do not modify legacy class
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#030</span>
+            <p class="q-text">Use the <strong>Decorator Pattern</strong> to add logging, caching, and authentication to a <code>DataService</code> class without modifying its core logic.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Decorators must be stackable in any order · cache TTL: 60s · auth checks before every operation · logging wraps operation time · each decorator is independently testable
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Behavioral Patterns</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#031</span>
+            <p class="q-text">Implement the <strong>Observer Pattern</strong> for a stock price system. Multiple listeners (Dashboard, Alert, Logger) react whenever a stock price changes.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Observers can subscribe/unsubscribe dynamically · notification must be asynchronous-safe · price change threshold for alerts: >5% · max 100 observers per stock
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#032</span>
+            <p class="q-text">Use the <strong>Strategy Pattern</strong> to implement a sorting system where the algorithm (QuickSort, MergeSort, BubbleSort) is selected at runtime based on input size.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            n < 20 → Bubble · 20 ≤ n < 1000 → Merge · n ≥ 1000 → Quick · strategy must be swappable mid-execution · benchmark mode compares all strategies
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#033</span>
+            <p class="q-text">Implement the <strong>Command Pattern</strong> for a text editor. Support undo/redo for operations: insert, delete, bold, italic.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Undo/redo stack max depth: 50 · batch commands supported · undo after redo clears the redo stack · each command must be reversible · no state mutation in Command object
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase-section" data-phase="6">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 06</span>
+      <h2 class="phase-title">SOLID Principles & Advanced OOP</h2>
+      <span class="phase-desc">SOLID · Composition · Real-world Systems</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">SOLID Principles</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#034</span>
+            <p class="q-text"><strong>[SRP]</strong> Refactor a bloated <code>UserManager</code> class that handles authentication, email sending, and database operations — split into proper single-responsibility classes.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Each class: only one reason to change · must maintain original functionality · UserManager may orchestrate but not implement · at least 3 separate classes
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#035</span>
+            <p class="q-text"><strong>[OCP]</strong> Design a discount system where new discount types (seasonal, loyalty, flash) can be added without modifying the existing <code>PriceCalculator</code> class.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            New discount = new class, NOT new if-else · discounts stackable · final price ≥ 0 · max combined discount: 70% · PriceCalculator must never be modified
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#036</span>
+            <p class="q-text"><strong>[LSP]</strong> Identify and fix the LSP violation: <code>Square extends Rectangle</code> where <code>setWidth()</code> and <code>setHeight()</code> break when a Square is used as a Rectangle.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" border-color: var(--hard)  onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Must redesign hierarchy, not just add guards · any code using Rectangle must work correctly with subclass · provide a test case that passes before/fails after with old design
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#037</span>
+            <p class="q-text"><strong>[DIP]</strong> Refactor a <code>ReportGenerator</code> class that directly depends on <code>MySQLDatabase</code>. Use dependency injection so it can work with any database.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            ReportGenerator must depend only on interface · swapping MySQL → MongoDB → InMemory requires zero changes to generator · support constructor and setter injection
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Real-world OOP System Design</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#038</span>
+            <p class="q-text">Design an <code>Online Food Ordering System</code> with classes for Restaurant, Menu, Order, Customer, DeliveryAgent, and Payment. Model their relationships using OOP.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Order min value: ₹50 · delivery radius: 10km · agent can carry max 3 orders · order states: PLACED→CONFIRMED→PREPARED→PICKED→DELIVERED · support cancellation before PREPARED
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#039</span>
+            <p class="q-text">Model a <code>Hospital Management System</code>: Patients, Doctors, Appointments, Prescriptions, and Wards. Support scheduling, bed allocation, and billing.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Doctor max: 20 appointments/day · bed assigned only to admitted patients · prescription requires doctor sign-off · bill = consultation + medication + bed × days
+          </div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#040</span>
+            <p class="q-text">Implement a <code>Chess Game</code> with proper OOP. Model Board, Pieces (King, Queen, Rook, Bishop, Knight, Pawn), Players, and move validation.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box">
+            <strong>CONSTRAINTS</strong>
+            Board: 8×8 · each piece has valid move rules · detect check/checkmate/stalemate · support castling and en passant · game state serializable to FEN notation
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 7 -->
+  <div class="phase-section" data-phase="7">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 07</span>
+      <h2 class="phase-title">Exception Handling in OOP</h2>
+      <span class="phase-desc">Custom Exceptions · Try-Catch · Exception Hierarchies</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Custom Exception Classes</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#041</span>
+            <p class="q-text">Create a custom exception hierarchy: <code>AppException → DatabaseException → ConnectionException</code>. Throw and catch at the appropriate levels.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Each exception must carry a message and error code · parent catch must NOT suppress child details · support exception chaining (cause)</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#042</span>
+            <p class="q-text">Design a <code>FileProcessor</code> that throws custom exceptions for: file not found, permission denied, corrupt file, and file too large — each as its own class.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Max file size: 100MB · each exception includes file path · caller must handle or declare all checked exceptions · finally block must close file handle</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#043</span>
+            <p class="q-text">Build a form validation system that collects ALL validation errors (not just the first) and throws a single <code>ValidationException</code> containing the full list.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Fields: name, email, age, password · each field has its own validator class · errors list is immutable after throw · must support i18n error messages</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#044</span>
+            <p class="q-text">Implement a retry mechanism using exceptions. A <code>RetryableOperation</code> class retries a failing task up to N times, throwing a <code>MaxRetriesExceededException</code> with all attempt details.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Max retries: configurable (default 3) · exponential backoff between attempts · non-retryable exceptions must propagate immediately · final exception contains list of all attempt exceptions</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 8 -->
+  <div class="phase-section" data-phase="8">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 08</span>
+      <h2 class="phase-title">Generics & Type Systems</h2>
+      <span class="phase-desc">Generic Classes · Bounded Types · Wildcards</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Generic Classes & Methods</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#045</span>
+            <p class="q-text">Implement a generic <code>Stack&lt;T&gt;</code> class with push, pop, peek, isEmpty, and size operations. It should work with any type.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>pop/peek on empty stack throws EmptyStackException · max capacity: configurable · push beyond capacity throws StackOverflowException · null elements NOT allowed</div>
+        </div>
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#046</span>
+            <p class="q-text">Create a generic <code>Pair&lt;A, B&gt;</code> class that holds two values of possibly different types. Include swap(), equals(), and a static factory method.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Immutable after creation · swap() returns a NEW Pair&lt;B,A&gt; · equals() checks both values · hashCode() must be consistent with equals()</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#047</span>
+            <p class="q-text">Build a generic <code>Repository&lt;T, ID&gt;</code> interface with save, findById, findAll, update, and delete. Implement it for a <code>User</code> entity with an in-memory store.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>ID must be Comparable · save() throws on duplicate ID · findById() returns Optional · delete() throws if not found · findAll() returns unmodifiable list</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#048</span>
+            <p class="q-text">Write a generic <code>BinarySearchTree&lt;T extends Comparable&lt;T&gt;&gt;</code> with insert, search, inorder traversal, and delete (all three cases).</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>No duplicate values · delete handles: leaf, one child, two children · inorder must return sorted list · T must implement Comparable · null not allowed</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#049</span>
+            <p class="q-text">Implement a generic <code>EventBus&lt;T&gt;</code> that allows type-safe event publishing and subscribing. Each event type has its own channel.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Subscribing to EventBus&lt;OrderEvent&gt; must NOT receive PaymentEvent · subscriber returns boolean (handled/not) · dead-letter queue for unhandled events · unsubscribe by token</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 9 -->
+  <div class="phase-section" data-phase="9">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 09</span>
+      <h2 class="phase-title">Composition & Association</h2>
+      <span class="phase-desc">Has-A · Uses-A · Aggregation · Composition</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Composition vs Aggregation</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#050</span>
+            <p class="q-text">Model a <code>House</code> that is composed of <code>Room</code> objects. Rooms cannot exist without a House. Demonstrate composition lifecycle (rooms destroyed with house).</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>House: min 1 room, max 20 · Room has type (bedroom/kitchen/etc) and area · total area = sum of rooms · rooms created inside House constructor</div>
+        </div>
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top">
+            <span class="q-num">#051</span>
+            <p class="q-text">Model a <code>University</code> that aggregates <code>Professor</code> objects. Professors can exist independently and belong to multiple universities.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-easy">Easy</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Professor passed in from outside (not created by University) · removing professor from university does NOT delete professor object · professor can be in max 2 universities</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#052</span>
+            <p class="q-text">Build a <code>Computer</code> class using composition: <code>CPU</code>, <code>RAM</code>, <code>Storage</code>, <code>GPU</code>. Implement a <code>benchmark()</code> method that combines component scores.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>CPU required; GPU optional · RAM min: 4GB · benchmark score = weighted sum (CPU 40%, RAM 20%, Storage 20%, GPU 20%) · GPU absent → GPU weight redistributed</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#053</span>
+            <p class="q-text">Prefer composition over inheritance: redesign a <code>Duck</code> class by extracting <code>FlyBehavior</code> and <code>QuackBehavior</code> as composable strategy objects instead of inheritance.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Behaviors swappable at runtime · RubberDuck can't fly (NoFlyBehavior) · MuteDuck can't quack · adding new behavior requires no changes to Duck class</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Dependency Injection & Inversion of Control</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#054</span>
+            <p class="q-text">Implement constructor injection, setter injection, and interface injection variants for a <code>UserService</code> that depends on a <code>UserRepository</code>. Compare trade-offs.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Constructor injection: dependency required · setter injection: optional, can be changed · each version must pass identical unit tests with a mock repository</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#055</span>
+            <p class="q-text">Build a simple <strong>IoC Container</strong> that auto-wires dependencies. Register classes, resolve them, and handle circular dependencies gracefully.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Circular dependency → throw CircularDependencyException with cycle path · support singleton and transient scopes · resolve by type or name · max dependency depth: 10</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 10 -->
+  <div class="phase-section" data-phase="10">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 10</span>
+      <h2 class="phase-title">OOP with Data Structures</h2>
+      <span class="phase-desc">OOP-flavored DSA · Iterators · Custom Collections</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Custom Collection Classes</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#056</span>
+            <p class="q-text">Design a <code>CircularQueue&lt;T&gt;</code> class with enqueue, dequeue, peek, isFull, and isEmpty. Implement the <code>Iterable</code> interface so it works in for-each loops.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Fixed capacity set at construction · iterator traverses from head to tail · enqueue on full throws QueueFullException · null elements not allowed</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#057</span>
+            <p class="q-text">Implement a <code>DoublyLinkedList&lt;T&gt;</code> class with add, remove, insertAt, reverse, and a custom Iterator that supports both forward and backward traversal.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Node class is private inner class · reverse() must be O(n) in-place · remove(index) throws IndexOutOfBoundsException · iterator must support remove() during iteration</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#058</span>
+            <p class="q-text">Build a <code>LRUCache&lt;K, V&gt;</code> class using a combination of a HashMap and a DoublyLinkedList. Support get and put with O(1) time complexity.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Capacity set at construction · get() on missing key returns null · put() evicts LRU on overflow · both get and put must be O(1) · thread-safe version as bonus</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#059</span>
+            <p class="q-text">Design an <code>ObservableList&lt;T&gt;</code> that fires events (ADDED, REMOVED, CHANGED) to registered listeners whenever the list is mutated.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Batch mutations fire one event · listeners can be weak references · event includes: type, index, old value, new value · listener throwing must not block other listeners</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Iterator Pattern</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#060</span>
+            <p class="q-text">Implement an <code>Iterator</code> for a binary tree that yields nodes in inorder, preorder, and postorder — selectable at creation time without recursion (use a stack internally).</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>No recursion · iterator is lazy (compute next only on hasNext/next call) · traversal mode set once at construction · supports concurrent iteration by multiple iterators</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#061</span>
+            <p class="q-text">Create a <code>FilteredIterator&lt;T&gt;</code> and <code>TransformingIterator&lt;T, R&gt;</code> that wrap any existing iterator with a predicate or mapper function (lazy evaluation).</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Fully lazy · composable: filter(transform(iterator)) · does not materialize underlying collection · hasNext() must not advance the iterator state visibly · stateless predicate/mapper</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 11 -->
+  <div class="phase-section" data-phase="11">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 11</span>
+      <h2 class="phase-title">Concurrency & OOP</h2>
+      <span class="phase-desc">Thread-safe Classes · Monitors · Immutability</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Thread-safe Object Design</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#062</span>
+            <p class="q-text">Make <code>BankAccount</code> thread-safe using synchronization. Multiple threads must be able to deposit and withdraw simultaneously without race conditions.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>No negative balance even under concurrent withdrawals · use intrinsic lock or ReentrantLock · demonstrate the race condition first, then fix it · test with 10 concurrent threads</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#063</span>
+            <p class="q-text">Implement a thread-safe <code>ObjectPool&lt;T&gt;</code> where objects are borrowed, used, and returned. Borrowing blocks if pool is empty until an object is returned.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Pool size: fixed at creation · borrow() blocks with timeout · returning an object not from this pool throws · validate object on return (discard if invalid) · support try-with-resources</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#064</span>
+            <p class="q-text">Design an immutable <code>Money</code> class for currency arithmetic. Ensure it is safe for use across threads, supports multiple currencies, and handles rounding correctly.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>No mutable state · adding different currencies throws CurrencyMismatchException · use BigDecimal internally · rounding mode: HALF_UP · arithmetic returns new Money instance</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 12 -->
+  <div class="phase-section" data-phase="12">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 12</span>
+      <h2 class="phase-title">Advanced System Design with OOP</h2>
+      <span class="phase-desc">Large-scale Modeling · State Machines · Event-driven</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">State Machine Design</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top">
+            <span class="q-num">#065</span>
+            <p class="q-text">Model a <code>TrafficLight</code> as a finite state machine using the State Pattern. States: RED, GREEN, YELLOW with timed auto-transitions.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-medium">Medium</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>RED: 30s · GREEN: 25s · YELLOW: 5s · emergency mode: force RED immediately · invalid transitions must throw · state context stores no transition logic</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#066</span>
+            <p class="q-text">Implement an <code>Order</code> lifecycle state machine: CREATED → PAID → PROCESSING → SHIPPED → DELIVERED (with CANCELLED and REFUNDED as terminal states from select points).</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Cancel only before SHIPPED · refund only after PAID · each transition logs timestamp and actor · invalid transition throws IllegalStateTransitionException with details</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Large-scale OOP System Design</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#067</span>
+            <p class="q-text">Design an <code>ATM System</code> with classes for Card, Account, Transaction, CashDispenser, and ATMSession. Model the full withdrawal flow with OOP.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>PIN locked after 3 wrong attempts · withdrawal limit: ₹10,000/day · session timeout: 2 min idle · dispenser tracks denominations · transaction is atomic (all or nothing)</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#068</span>
+            <p class="q-text">Model a <code>Social Media Feed</code> system: User, Post, Comment, Like, Follow, and Feed. Feed shows posts from followed users, sorted by time, with pagination.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Feed page size: 20 · post max length: 280 chars · user can't follow themselves · like is idempotent · comment nesting: max 2 levels · unfollow removes posts from feed</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#069</span>
+            <p class="q-text">Design an <code>Elevator System</code> for a 20-floor building with 3 elevators. Model Elevator, Floor, Request, and a Scheduler that dispatches the optimal elevator.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Elevator capacity: 10 persons · scheduler: SCAN or LOOK algorithm · elevator states: IDLE, MOVING_UP, MOVING_DOWN · emergency: all elevators go to ground floor · request queue per elevator</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#070</span>
+            <p class="q-text">Build a <code>Cab Booking System</code> (Ola/Uber style): Rider, Driver, Trip, Location, PricingEngine, and a MatchingService that finds the nearest available driver.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Surge pricing: 1.5× if demand > 2× supply · driver radius: 5km · trip states: REQUESTED→ACCEPTED→STARTED→COMPLETED · rating: 1–5 · driver can reject (reassign to next nearest)</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#071</span>
+            <p class="q-text">Design a <code>Vending Machine</code> using the State Pattern. States: Idle, HasMoney, Dispensing, OutOfStock. Handle coin insertion, product selection, change return, and refill.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Accepts coins: ₹1, ₹2, ₹5, ₹10 · max product slots: 10 · change returned in minimum coins · out-of-stock triggers OutOfStock state · refund if exact change unavailable</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#072</span>
+            <p class="q-text">Model a <code>Movie Ticket Booking System</code>: Movie, Theatre, Screen, Seat, Showtime, Booking, and Payment. Handle concurrent seat reservations without double-booking.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Seat lock timeout: 10 min · max seats per booking: 6 · seat categories: REGULAR, PREMIUM, RECLINER · booking confirmed only after payment · cancellation refund: 100% if >24hr, 50% if >2hr</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#073</span>
+            <p class="q-text">Design a <code>Cache System</code> supporting pluggable eviction policies: LRU, LFU, and FIFO. The policy must be swappable without changing the cache interface.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Policy injected at construction · get/put both O(1) for LRU · TTL support (entries expire after N seconds) · cache miss triggers a configurable loader function · thread-safe</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#074</span>
+            <p class="q-text">Build a <code>Rate Limiter</code> class supporting three algorithms as strategies: Token Bucket, Fixed Window, and Sliding Window — selectable per API endpoint.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Allow(userId, endpoint) returns true/false · Token Bucket: configurable refill rate · Fixed Window: configurable window size · Sliding Window: per-second granularity · thread-safe · per-user limits</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#075</span>
+            <p class="q-text">Design a <code>URL Shortener</code>: UrlEntry, ShortCodeGenerator, UrlRepository, RedirectService, and AnalyticsTracker. Each short URL tracks click count, device type, and country.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Short code: 7 chars alphanumeric · custom alias support · expiry: optional, configurable · same URL → same short code (idempotent) · analytics stored async, must not slow redirect · 10B URLs capacity</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#076</span>
+            <p class="q-text">Model a <code>Splitwise-style Expense Tracker</code>: Group, Member, Expense, Split, Settlement. Calculate the minimum number of transactions to settle all debts.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Split types: equal, exact, percentage, shares · amounts in rupees with 2 decimal precision · minimize settlement transactions · group max: 50 members · expense description required</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#077</span>
+            <p class="q-text">Design a <code>Publish-Subscribe Message Broker</code>: Topic, Publisher, Subscriber, Message, and Broker. Support multiple subscribers per topic and guaranteed delivery.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>At-least-once delivery · subscriber acknowledges receipt · dead-letter topic for failed deliveries · max retries: 3 · message TTL: configurable · topic max message size: 1MB</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top">
+            <span class="q-num">#078</span>
+            <p class="q-text">Implement a <code>Document Version Control System</code> (like Git). Model Repository, Commit, Branch, Diff, and Merge. Support branching, commit history, and 3-way merge.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer">
+            <span class="badge badge-hard">Hard</span>
+            <span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span>
+          </div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Commit is immutable once created · merge conflict: flag lines, do not auto-resolve · branch name: alphanumeric + dashes · detached HEAD state must be handled · commit hash: SHA-256 of content + parent + timestamp</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 13 -->
+  <div class="phase-section" data-phase="13">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 13</span>
+      <h2 class="phase-title">Java Fundamentals — Data Types & Memory</h2>
+      <span class="phase-desc">Primitives · Wrapper Classes · String Pool · Stack vs Heap</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Primitives & Wrappers</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#079</span>
+            <p class="q-text">🏦 <strong>Scenario:</strong> A banking app stores account balances as <code>int</code>. Customers complain that large balances show negative values. Identify the root cause and fix it using the correct Java type.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Max balance: ₹99,99,99,999 · explain integer overflow · choose between long, BigDecimal, double with justification · show the overflow scenario with exact numbers</div>
+        </div>
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#080</span>
+            <p class="q-text">🔁 <strong>Scenario:</strong> A student writes <code>Integer a = 127; Integer b = 127; System.out.println(a == b);</code> and gets <code>true</code>. But with 128 they get <code>false</code>. Explain and fix using proper comparison.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Explain Integer cache range [-128, 127] · explain == vs equals() · show correct comparison · explain autoboxing pitfalls · apply fix without changing variable types</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#081</span>
+            <p class="q-text">💰 <strong>Scenario:</strong> A tax calculator uses <code>double</code> for arithmetic and produces <code>0.30000000000000004</code> instead of <code>0.30</code>. A client is billed wrongly. Fix it properly for financial calculations.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use BigDecimal · explain IEEE 754 floating point · rounding mode: HALF_UP · precision: 2 decimal places · no casting back to double for display</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: String & String Pool</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#082</span>
+            <p class="q-text">🔐 <strong>Scenario:</strong> A login system stores passwords as <code>String</code>. A security audit flags this as a risk because sensitive data can linger in the String Pool. Rewrite it using <code>char[]</code> and explain why.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Demonstrate String immutability and pool retention · char[] must be zeroed after use · explain GC cannot guarantee String cleanup · show heap dump risk</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#083</span>
+            <p class="q-text">📋 <strong>Scenario:</strong> A report generator builds a 10,000-line report by concatenating Strings in a loop (<code>result += line</code>). It runs for 45 seconds. Diagnose and fix the performance issue.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Explain O(n²) object creation · fix with StringBuilder · explain when to use StringBuffer (thread safety) · measure/estimate object count before vs after · initial capacity hint if known</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#084</span>
+            <p class="q-text">🧩 <strong>Scenario:</strong> A developer writes <code>String s1 = "hello"; String s2 = new String("hello");</code> and is confused why <code>s1 == s2</code> is false but <code>s1.equals(s2)</code> is true. Fully explain the memory model.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Draw Stack/Heap/String Pool diagram · explain intern() · show 4 cases: literal==literal, new==new, literal==new, s.intern()==literal · explain when to use intern()</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 14 -->
+  <div class="phase-section" data-phase="14">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 14</span>
+      <h2 class="phase-title">Java Collections Framework</h2>
+      <span class="phase-desc">List · Set · Map · Queue · Choosing the Right Collection</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: List</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#085</span>
+            <p class="q-text">🛒 <strong>Scenario:</strong> An e-commerce cart stores items as an <code>ArrayList</code>. The app frequently inserts and removes items from the middle. It becomes slow as the cart grows. Diagnose and suggest the right collection.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Compare ArrayList vs LinkedList time complexity for insert/delete · cart max size: 100 items · also needs index-based access · justify final choice with trade-offs</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#086</span>
+            <p class="q-text">📦 <strong>Scenario:</strong> A warehouse tracks inventory items. Items must be sorted by expiry date at all times, and duplicates (same item, different batch) are allowed. Which List/Collection do you use and why?</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Sorted on insert, not on read · duplicates allowed · implement Comparable on Item · use TreeSet or PriorityQueue with reasoning · max 10,000 items</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Set & Map</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#087</span>
+            <p class="q-text">✉️ <strong>Scenario:</strong> A newsletter system stores subscriber emails. Users often try to subscribe twice. You need O(1) duplicate checking. A junior dev uses <code>ArrayList</code> and calls <code>contains()</code>. What's wrong?</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Explain O(n) vs O(1) lookup · switch to HashSet · emails are case-insensitive (normalize before store) · 1M subscribers · also need alphabetical listing: show how to get sorted view</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#088</span>
+            <p class="q-text">🗺️ <strong>Scenario:</strong> A ride-sharing app maps driverID → current location. It needs O(1) lookup, but also needs to iterate drivers in the order they came online. Which Map and why?</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Compare HashMap, LinkedHashMap, TreeMap · insertion-order iteration required · O(1) get/put · max 50,000 drivers · thread-safe version as extension: use ConcurrentHashMap</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#089</span>
+            <p class="q-text">📊 <strong>Scenario:</strong> A word-frequency counter reads a 100MB text file. It must count occurrences of each unique word. A dev uses <code>HashMap&lt;String,Integer&gt;</code> with get/put. What subtle bug can occur? Fix it.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>NullPointerException on first occurrence · fix with getOrDefault() or merge() or compute() · also handle case-insensitivity · top 10 words by frequency at end</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#090</span>
+            <p class="q-text">🔑 <strong>Scenario:</strong> A developer uses a mutable <code>Employee</code> object as a HashMap key. After inserting, they update the employee's name. The value can no longer be found. Explain and fix.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Explain hashCode/equals contract · mutable key breaks bucket lookup · fix: use immutable key fields (employeeId only) · override hashCode+equals correctly · demonstrate with code trace</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Queue & Deque</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#091</span>
+            <p class="q-text">🖨️ <strong>Scenario:</strong> A print server queues print jobs. High-priority documents (medical reports) must print before regular ones regardless of arrival time. Design using the right Java collection.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use PriorityQueue with Comparator · priority levels: 1 (highest) to 5 · same-priority jobs: FIFO order · max queue size: 500 · peek() never blocks; poll() returns null if empty</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#092</span>
+            <p class="q-text">↩️ <strong>Scenario:</strong> A browser's back/forward navigation needs two stacks. But a product manager says "users should also be able to jump directly to any history entry." Redesign using Java Deque.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use ArrayDeque · navigating to a history entry clears forward stack · max history: 50 entries · expose: back(), forward(), jumpTo(index), currentPage() · index out of range throws</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 15 -->
+  <div class="phase-section" data-phase="15">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 15</span>
+      <h2 class="phase-title">Java — Static, Final & Access Modifiers</h2>
+      <span class="phase-desc">static · final · access levels · inner classes</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: static Keyword</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#093</span>
+            <p class="q-text">🏭 <strong>Scenario:</strong> A factory wants to track how many <code>Machine</code> objects have been created across the entire application. A new hire puts a count field as instance variable. It always shows 1. Fix it.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use static counter · decrement on object destruction/decommission · thread-safe increment (AtomicInteger) · getter is static method · reset() method for tests only</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#094</span>
+            <p class="q-text">⚙️ <strong>Scenario:</strong> An application has global configuration (API keys, DB URL). A developer loads it in a static block. Another dev calls a static method before the class is initialized. What happens?</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Explain class loading order: static blocks → static fields → constructors · ExceptionInInitializerError scenario · show correct ordering · lazy initialization as alternative</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#095</span>
+            <p class="q-text">🧪 <strong>Scenario:</strong> A testing framework breaks because a class uses static state that leaks between test cases — each test pollutes the next. Redesign the class to be testable without static state.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Explain static state isolation problem · move state to instance scope · inject state via constructor · reset() only if static is unavoidable · show before/after test structure</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: final Keyword</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#096</span>
+            <p class="q-text">🔒 <strong>Scenario:</strong> A developer declares <code>final List&lt;String&gt; roles = new ArrayList&lt;&gt;();</code> and is surprised that they can still call <code>roles.add("admin")</code>. Explain the misconception and show true immutability.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>final = reference is constant, not contents · show Collections.unmodifiableList() · show List.of() (Java 9+) · deep immutability if list contains mutable objects · UnsupportedOperationException demo</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#097</span>
+            <p class="q-text">🚫 <strong>Scenario:</strong> Your team creates a <code>SecurityUtils</code> class with sensitive decryption logic. A junior dev subclasses it and overrides the validation method, bypassing security. Prevent this with proper Java design.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use final class · make constructor private where appropriate · explain why String is final · mark critical methods final if class itself is extensible · show attempted bypass and compiler error</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Access Modifiers</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#098</span>
+            <p class="q-text">🏗️ <strong>Scenario:</strong> A module system has <code>OrderService</code>, <code>PaymentService</code>, and <code>InternalAuditLog</code>. Design access modifiers so services can talk to each other but <code>InternalAuditLog</code> is never accessed from outside the package.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>4 access levels: private, default, protected, public · InternalAuditLog: package-private class · Services: public class, package-private audit methods · subclasses in different package: use protected · draw package diagram</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 16 -->
+  <div class="phase-section" data-phase="16">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 16</span>
+      <h2 class="phase-title">Java — Interfaces, Abstract Classes & Functional</h2>
+      <span class="phase-desc">default methods · @FunctionalInterface · Lambda · Method References</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Interface Evolution</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#099</span>
+            <p class="q-text">🔧 <strong>Scenario:</strong> A <code>Drawable</code> interface is implemented by 50 classes across the codebase. You need to add a <code>resize()</code> method. Adding it breaks all 50 classes. Solve this without modifying any existing class.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use default method in interface · default resize() provides sensible behavior · a class can still override it · show diamond problem with two interfaces having same default method · resolve with explicit override</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#100</span>
+            <p class="q-text">⚖️ <strong>Scenario:</strong> A team debates whether to use an abstract class or interface for a <code>Vehicle</code> base. Some vehicles share a <code>startEngine()</code> implementation, others don't. Both sides have arguments. Decide and justify.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>State needed? → abstract class · multiple inheritance needed? → interface · shared implementation with state → abstract class · show when to combine both · Electric vehicle has no engine: handle gracefully</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Lambdas & Functional Interfaces</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#101</span>
+            <p class="q-text">🔀 <strong>Scenario:</strong> A student list must be sorted by GPA descending, then by name ascending for ties. A junior uses nested if-else in a Comparator. Rewrite it using lambda and Comparator chaining.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use Comparator.comparing().thenComparing() · handle null GPA (nullsLast) · sort must be stable · lambda must be a one-liner · also show method reference equivalent</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#102</span>
+            <p class="q-text">🎛️ <strong>Scenario:</strong> A notification service sends messages via different channels. Each channel is just a function that takes a String. Replace a strategy class hierarchy with a <code>@FunctionalInterface</code> and lambda.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>@FunctionalInterface with single send(String) method · pass email, SMS, push as lambdas · compose: sendAll(message, List&lt;NotificationChannel&gt;) · show method reference to existing sendEmail(String) method</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#103</span>
+            <p class="q-text">🔗 <strong>Scenario:</strong> A data pipeline applies transformations on a list of transactions: filter fraudulent, convert currency, mask card number, sort by amount. Build this as a composable chain using Function.andThen() and Predicate.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Each step is a separate Function&lt;T,T&gt; or Predicate&lt;T&gt; · composable via andThen/and/or · pipeline is reusable for different datasets · no intermediate collections · steps must be unit-testable in isolation</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 17 -->
+  <div class="phase-section" data-phase="17">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 17</span>
+      <h2 class="phase-title">Java Streams & Optional</h2>
+      <span class="phase-desc">Stream API · Optional · Collectors · Parallel Streams</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Stream API</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#104</span>
+            <p class="q-text">📈 <strong>Scenario:</strong> An HR system needs: from a list of employees, get the top 3 highest-paid employees in the "Engineering" department, returning only their names in alphabetical order. Write this as a single Stream pipeline.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Chain: filter → sorted(desc by salary) → limit(3) → map(name) → sorted(asc) → collect · no intermediate lists · handle empty department gracefully · result is List&lt;String&gt;</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#105</span>
+            <p class="q-text">🗂️ <strong>Scenario:</strong> A school database has students. Group them by grade level, and for each group compute the average score. A manager also wants to know the grade level with the highest average. Use Stream + Collectors.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Collectors.groupingBy + averagingDouble · result: Map&lt;String, Double&gt; · find max entry: max by value on entrySet stream · handle empty list: return Optional.empty() · scores range 0.0–100.0</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#106</span>
+            <p class="q-text">⚡ <strong>Scenario:</strong> A data analyst converts a sequential stream to parallel to speed up processing of 10M records. The results are non-deterministic and sometimes wrong. Diagnose the thread-safety issue and fix it.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Identify shared mutable state (ArrayList accumulator) · fix with thread-safe Collector · use Collectors.toList() not manual add · explain when parallel helps vs hurts · show benchmark both ways</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Optional</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#107</span>
+            <p class="q-text">💥 <strong>Scenario:</strong> A user profile lookup returns null when user not found. The calling code crashes with NullPointerException 3 levels deep. Refactor the entire call chain using Optional to eliminate null checks.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Chain: findUser() → getAddress() → getCity() using flatMap · orElse("Unknown") at end · never call get() without isPresent() · Optional must not be used as method parameter or field · show anti-patterns too</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#108</span>
+            <p class="q-text">🔍 <strong>Scenario:</strong> A config system loads properties from file, environment variables, and defaults — in that priority order. Build a fallback chain using Optional.or() so the first non-empty value wins.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use Optional.or() (Java 9+) · each source returns Optional&lt;String&gt; · evaluation must be lazy (don't call all sources if first wins) · ifPresentOrElse() for logging · throw ConfigNotFoundException if all empty</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 18 -->
+  <div class="phase-section" data-phase="18">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 18</span>
+      <h2 class="phase-title">Java — Exception Handling Scenarios</h2>
+      <span class="phase-desc">Checked vs Unchecked · try-with-resources · Multi-catch · finally</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Checked vs Unchecked</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="easy">
+          <div class="q-top"><span class="q-num">#109</span>
+            <p class="q-text">📁 <strong>Scenario:</strong> A file reader method declares <code>throws IOException</code>. A caller wraps every call in try-catch but swallows the exception silently (<code>catch(IOException e) {}</code>). What's the danger? Rewrite it properly.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-easy">Easy</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Never swallow exceptions silently · at minimum log the error · re-throw as RuntimeException if can't handle · explain checked (must handle) vs unchecked (runtime) · show exception chaining with cause</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#110</span>
+            <p class="q-text">🌊 <strong>Scenario:</strong> A method catches Exception at the top level, hiding bugs. A NullPointerException inside gets logged as "An error occurred." The real cause is invisible. Fix the exception handling architecture.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Catch specific exceptions first · catch(Exception) only at boundary layer · preserve stack trace · use multi-catch for same-handling exceptions · global exception handler pattern</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#111</span>
+            <p class="q-text">🔌 <strong>Scenario:</strong> A database connection is opened in try block, used, and closed in finally. But if <code>close()</code> also throws an exception, the original exception is lost. Fix using try-with-resources.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Implement AutoCloseable · try-with-resources auto-calls close() · suppressed exceptions accessible via getSuppressed() · multiple resources: closed in reverse order · show the finally-exception-loss bug first</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#112</span>
+            <p class="q-text">🔁 <strong>Scenario:</strong> A REST API must never return a 500 error to clients — all exceptions must be mapped to meaningful HTTP responses. Design a global exception-to-response mapping system for a Java service layer.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Map: NotFoundException→404, ValidationException→400, AuthException→401, all others→500 · response body: {errorCode, message, timestamp} · log 500s with full trace, others with INFO · exception hierarchy maps to HTTP hierarchy</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 19 -->
+  <div class="phase-section" data-phase="19">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 19</span>
+      <h2 class="phase-title">Java — Multithreading Scenarios</h2>
+      <span class="phase-desc">Thread lifecycle · synchronized · wait/notify · Executors</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Race Conditions & Synchronization</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#113</span>
+            <p class="q-text">🎫 <strong>Scenario:</strong> A concert ticketing app allows 100 concurrent users to book the last seat. Without synchronization, 5 users get booking confirmations for the same seat. Fix the race condition.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Demonstrate race with non-synchronized code · fix with synchronized block (not method — minimize lock scope) · compare with AtomicInteger · 100 threads, 1 seat: only 1 must succeed · test with CountDownLatch</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#114</span>
+            <p class="q-text">🍽️ <strong>Scenario:</strong> A restaurant kitchen has 1 chef and 3 waiters. Waiters wait for the chef to prepare orders. Implement the Producer-Consumer problem using <code>wait()</code> and <code>notifyAll()</code>.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Buffer size: 5 orders · chef waits if buffer full · waiters wait if buffer empty · use notifyAll() not notify() · call wait() inside while loop (not if) · graceful shutdown signal</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#115</span>
+            <p class="q-text">🔐 <strong>Scenario:</strong> Two threads each hold one lock and wait for the other — deadlock. Thread A locks resource1 then waits for resource2. Thread B holds resource2 and waits for resource1. Detect, prevent, and fix.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Reproduce deadlock first · fix with consistent lock ordering · alternative: tryLock() with timeout · explain: detection (ThreadMXBean), prevention (ordering), avoidance (timeout) · test with 10 threads</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#116</span>
+            <p class="q-text">🏊 <strong>Scenario:</strong> An API server spawns a new thread for every incoming request. Under load (1000 req/sec), threads pile up and the JVM crashes with OutOfMemoryError. Redesign using a thread pool.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Use Executors.newFixedThreadPool · pool size: CPU cores × 2 for I/O bound · queue overflow: CallerRunsPolicy (backpressure) · graceful shutdown: awaitTermination · Future for response · CompletableFuture as extension</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 20 -->
+  <div class="phase-section" data-phase="20">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 20</span>
+      <h2 class="phase-title">Java — Memory, GC & JVM Internals</h2>
+      <span class="phase-desc">Heap · Stack · GC · Memory Leaks · ClassLoader</span>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: Memory Leaks</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#117</span>
+            <p class="q-text">📈 <strong>Scenario:</strong> A long-running Java server's memory usage grows steadily over 2 days and then crashes with OutOfMemoryError. The dev added items to a static <code>HashMap</code> but never removed them. Identify and fix this memory leak pattern.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Identify: static collection holding references · fix: use WeakHashMap or explicit eviction · LRU eviction as alternative · use VisualVM or jmap to diagnose · explain GC roots preventing collection</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#118</span>
+            <p class="q-text">👂 <strong>Scenario:</strong> An event system registers listeners on a Subject. Objects register but are never unregistered. The Subject holds strong references so listeners are never GC'd even when callers are done. Fix with WeakReferences.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Replace List&lt;Listener&gt; with List&lt;WeakReference&lt;Listener&gt;&gt; · prune null weak refs on each notify · demonstrate leak first · show GC collecting listener when caller goes out of scope · thread-safe pruning</div>
+        </div>
+
+        <div class="q-card" data-diff="hard">
+          <div class="q-top"><span class="q-num">#119</span>
+            <p class="q-text">🏗️ <strong>Scenario:</strong> A non-static inner class in Java holds an implicit reference to its outer class. A background thread keeps the inner class alive, leaking the entire outer class. Explain and fix using a static nested class.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-hard">Hard</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Show implicit outer reference in non-static inner class · fix: static nested class + WeakReference to outer · or: lambda captures only needed fields (not 'this') · common in Android Handler bug — relate to that pattern</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="concept-group">
+      <div class="concept-label">Scenario: equals(), hashCode() & Comparable</div>
+      <div class="questions-grid">
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#120</span>
+            <p class="q-text">🔗 <strong>Scenario:</strong> A developer overrides <code>equals()</code> on a <code>Product</code> class but not <code>hashCode()</code>. Products are put in a <code>HashSet</code>, but duplicates still appear. Explain the contract violation and fix it.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Rule: equal objects MUST have equal hashCodes · override both or neither · use Objects.hash() · explain hash bucket lookup · show behavior in HashSet, HashMap, and Hashtable · test reflexive, symmetric, transitive, consistent</div>
+        </div>
+
+        <div class="q-card" data-diff="medium">
+          <div class="q-top"><span class="q-num">#121</span>
+            <p class="q-text">🥇 <strong>Scenario:</strong> A leaderboard needs players sorted by score descending, then by username ascending. Implement both <code>Comparable</code> and a separate <code>Comparator</code>, and explain when to use each.</p>
+            <div class="q-check" onclick="toggleSolved(this)"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div>
+          </div>
+          <div class="q-footer"><span class="badge badge-medium">Medium</span><span class="constraint-toggle" onclick="toggleConstraint(this)">+ constraints</span></div>
+          <div class="constraint-box"><strong>CONSTRAINTS</strong>Comparable: natural order (by score desc) · Comparator: alternative order (by name) · compareTo() must be consistent with equals() · score ties broken by username asc · use in TreeSet and Collections.sort()</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" id="no-results">No questions match this filter.</div>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'oop_solved';
+
+  function getSolved() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  function saveSolved(obj) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(obj)); } catch {}
+  }
+
+  function getCardId(card) {
+    return card.querySelector('.q-num').textContent;
+  }
+
+  function updateStats() {
+    const all = document.querySelectorAll('.q-card');
+    const solved = document.querySelectorAll('.q-card.solved');
+    const easy = document.querySelectorAll('.q-card[data-diff="easy"]');
+    const med = document.querySelectorAll('.q-card[data-diff="medium"]');
+    const hard = document.querySelectorAll('.q-card[data-diff="hard"]');
+
+    document.getElementById('total-count').textContent = all.length;
+    document.getElementById('solved-count').textContent = solved.length;
+    document.getElementById('easy-count').textContent = easy.length;
+    document.getElementById('med-count').textContent = med.length;
+    document.getElementById('hard-count').textContent = hard.length;
+
+    const pct = all.length ? Math.round((solved.length / all.length) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = solved.length + ' / ' + all.length + ' solved';
+  }
+
+  function toggleSolved(checkEl) {
+    const card = checkEl.closest('.q-card');
+    card.classList.toggle('solved');
+    const solved = getSolved();
+    const id = getCardId(card);
+    if (card.classList.contains('solved')) solved[id] = true;
+    else delete solved[id];
+    saveSolved(solved);
+    updateStats();
+  }
+
+  function toggleConstraint(btn) {
+    const box = btn.closest('.q-card').querySelector('.constraint-box');
+    box.classList.toggle('open');
+    btn.textContent = box.classList.contains('open') ? '− constraints' : '+ constraints';
+  }
+
+  // Restore solved state
+  const savedSolved = getSolved();
+  document.querySelectorAll('.q-card').forEach(card => {
+    if (savedSolved[getCardId(card)]) card.classList.add('solved');
+  });
+
+  // Filter
+  let activeFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  function applyFilter() {
+    const cards = document.querySelectorAll('.q-card');
+    let visible = 0;
+    cards.forEach(card => {
+      let show = false;
+      if (activeFilter === 'all') show = true;
+      else if (activeFilter === 'easy') show = card.dataset.diff === 'easy';
+      else if (activeFilter === 'medium') show = card.dataset.diff === 'medium';
+      else if (activeFilter === 'hard') show = card.dataset.diff === 'hard';
+      else if (activeFilter === 'unsolved') show = !card.classList.contains('solved');
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    // Hide empty phase sections
+    document.querySelectorAll('.phase-section').forEach(section => {
+      const visibleCards = [...section.querySelectorAll('.q-card')].filter(c => c.style.display !== 'none');
+      section.style.display = visibleCards.length ? '' : 'none';
+    });
+
+    document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  updateStats();
+</script>
+</body>
+</html>
